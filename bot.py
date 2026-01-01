@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import asyncio
+import os  
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -24,6 +25,7 @@ async def load_extensions():
 async def main():
     async with bot:
         await load_extensions()
-        await bot.start("MTQ1NTU0NTg4OTE0MDUxMDg0MQ.GXGAyQ.lrMevozQDGtI7qjzUTBGyNwrN5pbL6c4lxOP90")
+        token = os.getenv("DISCORD_TOKEN")  # Ensure your token is set in environment variables
+        await bot.start(token)
 
 asyncio.run(main())
