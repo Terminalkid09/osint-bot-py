@@ -1,6 +1,7 @@
 import aiohttp
 import discord
 from discord.ext import commands
+import re
 
 class BreachCheck(commands.Cog):
     def __init__(self, bot):
@@ -10,9 +11,14 @@ class BreachCheck(commands.Cog):
     async def breach(self, ctx, email: str):
         """Controlla se un'email è presente in data breach"""
 
+        # Validazione email
+        if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
+            await ctx.send("❌ L'email inserita non è valida.")
+            return
+
         await ctx.send("🔍 Controllo in corso...")
 
-        url = f"https://leakcheck.io/api/public?check={email}"
+        url = f"https://breachdirectory.org/api/search?query={email}"
 
         try:
             async with aiohttp.ClientSession() as session:
@@ -23,7 +29,7 @@ class BreachCheck(commands.Cog):
             return
 
         # Nessun risultato
-        if not data.get("found"):
+        if not data.get("success") or not data.get("result"):
             embed = discord.Embed(
                 title="🟢 Nessun Data Breach trovato",
                 description=f"L'email **{email}** non risulta in nessun leak conosciuto.",
@@ -38,14 +44,20 @@ class BreachCheck(commands.Cog):
             color=discord.Color.red()
         )
 
-        for entry in data.get("sources", [])[:10]:
+        leaks = data.get("result", [])[:10]
+
+        for entry in leaks:
+            source = entry.get("source", "Sconosciuto")
+            password = entry.get("password", "Non disponibile")
+            hash_type = entry.get("hash_type", "N/A")
+
             embed.add_field(
-                name=f"🔓 Leak: {entry}",
-                value="Password disponibile solo con API key",
+                name=f"🔓 Leak: {source}",
+                value=f"**Password:** `{password}`\n**Hash:** `{hash_type}`",
                 inline=False
             )
 
-        embed.set_footer(text="Fonte: LeakCheck.io (public API)")
+        embed.set_footer(text="Fonte: BreachDirectory.org (free API)")
         await ctx.send(embed=embed)
 
 async def setup(bot):

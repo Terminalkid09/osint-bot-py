@@ -7,25 +7,46 @@ class PortScanner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
+        # Mappa OSINT porta => servizio
+        self.service_map = {
+            21: "FTP",
+            22: "SSH",
+            23: "Telnet",
+            25: "SMTP",
+            53: "DNS",
+            80: "HTTP",
+            110: "POP3",
+            143: "IMAP",
+            443: "HTTPS",
+            3306: "MySQL",
+            3389: "RDP",
+            8080: "HTTP-Proxy",
+            8443: "HTTPS-Alt"
+        }
+
     async def scan_port(self, host, port):
-        """Scansiona una porta e prova a leggere il banner"""
+        """Scansiona una porta, identifica il servizio e prova a leggere il banner"""
         try:
             reader, writer = await asyncio.wait_for(
                 asyncio.open_connection(host, port),
-                timeout=1
+                timeout=1.5
             )
 
-            # Prova a leggere un banner (servizio)
             try:
-                banner = await asyncio.wait_for(reader.read(100), timeout=1)
+                banner = await asyncio.wait_for(reader.read(256), timeout=1)
                 banner = banner.decode(errors="ignore").strip()
+                if not banner:
+                    banner = "Nessun banner"
             except:
                 banner = "Nessun banner"
 
             writer.close()
             await writer.wait_closed()
 
-            return port, banner
+            # Identificazione servizio
+            service = self.service_map.get(port, "Sconosciuto")
+
+            return port, service, banner
 
         except:
             return None
@@ -41,13 +62,19 @@ class PortScanner(commands.Cog):
 
         await ctx.send(f"🔍 Scansione porte per: `{host}`")
 
+        # Controllo host raggiungibile
+        try:
+            socket.gethostbyname(host)
+        except:
+            await ctx.send("❌ Host non valido o non raggiungibile.")
+            return
+
         # Porte comuni se non specificato
         common_ports = [
             21, 22, 23, 25, 53, 80, 110, 143,
             443, 3306, 3389, 8080, 8443
         ]
 
-        # Se l'utente specifica un range personalizzato
         if ports:
             try:
                 start, end = ports.split("-")
@@ -78,10 +105,10 @@ class PortScanner(commands.Cog):
         )
 
         if open_ports:
-            for port, banner in open_ports[:20]:  # Limite per evitare spam
+            for port, service, banner in open_ports[:25]:  # Limite per non spammare
                 embed.add_field(
-                    name=f"🟢 Porta {port} aperta",
-                    value=f"Banner: `{banner}`",
+                    name=f"🟢 Porta {port} aperta ({service})",
+                    value=f"**Banner:** `{banner}`",
                     inline=False
                 )
         else:

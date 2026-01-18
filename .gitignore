@@ -1,0 +1,64 @@
+# -------------------------
+#  PYTHON BASICS
+# -------------------------
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+
+# Virtual environments
+venv/
+env/
+.venv/
+ENV/
+
+# Distribution / packaging
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# -------------------------
+#  EDITORS & OS FILES
+# -------------------------
+# VSCode
+.vscode/
+
+# PyCharm
+.idea/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+
+# -------------------------
+#  ENVIRONMENT VARIABLES
+# -------------------------
+.env
+*.env
+
+# -------------------------
+#  LOGS & TEMP FILES
+# -------------------------
+*.log
+logs/
+tmp/
+temp/
+
+# -------------------------
+#  PROJECT SPECIFIC
+# -------------------------
+# Cache dei comandi Discord
+commands/__pycache__/
+
+# Screenshot o immagini locali
+*.png
+*.jpg
+*.jpeg
+*.gif
+
+# File personali
+personal/

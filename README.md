@@ -18,6 +18,9 @@ This bot includes a full suite of OSINT commands:
 | `!portscan` | Scan common or custom ports and grab service banners 
 | `!social`   | Check if a username exists on major social platforms 
 | `!whois`    | Retrieve WHOIS information for a domain 
+| `!email`    | Perform OSINT on an email address
+| `!dns`      | Perform DNS lookup for a domain
+| `!subdomains` | Find subdomains for a given domain
 | `!help`     | Show all available commands and categories 
 
 
