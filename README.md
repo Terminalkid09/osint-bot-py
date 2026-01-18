@@ -54,13 +54,21 @@ As a cybersecurity student and self-taught developer, I wanted a tool that could
 
 ---
 
-## 📦 Installation
+## 📦 Installation (without docker)
 
 ```bash
-git clone https://github.com/terminalkid09/osint-bot
-cd osint-bot
+git clone https://github.com/terminalkid09/osint-bot-py
+cd osint-bot-py
 pip install -r requirements.txt
 python bot.py
+```
+
+## Installation (with Docker)
+
+```bash
+git clone https://github.com/terminalkid09/osint-bot-py
+cd osint-bot-py
+docker compose up -d
 ```
 
 **@Terminalkid09**

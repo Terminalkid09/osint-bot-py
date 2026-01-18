@@ -1,0 +1,9 @@
+version: "3.9"
+
+services:
+  osintbot:
+    build: .
+    container_name: osint-bot
+    restart: always
+    env_file:
+      - .env
