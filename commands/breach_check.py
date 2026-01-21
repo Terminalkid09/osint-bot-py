@@ -18,18 +18,21 @@ class BreachCheck(commands.Cog):
 
         await ctx.send("🔍 Controllo in corso...")
 
-        url = f"https://breachdirectory.org/api/search?query={email}"
+        url = f"https://scylla.sh/search?q={email}"
 
         try:
             async with aiohttp.ClientSession() as session:
                 async with session.get(url) as response:
+                    if response.status != 200:
+                        await ctx.send("❌ Errore nella richiesta all'API.")
+                        return
                     data = await response.json()
         except Exception as e:
             await ctx.send(f"❌ Errore durante la richiesta: `{e}`")
             return
 
         # Nessun risultato
-        if not data.get("success") or not data.get("result"):
+        if not data or len(data) == 0:
             embed = discord.Embed(
                 title="🟢 Nessun Data Breach trovato",
                 description=f"L'email **{email}** non risulta in nessun leak conosciuto.",
@@ -44,7 +47,7 @@ class BreachCheck(commands.Cog):
             color=discord.Color.red()
         )
 
-        leaks = data.get("result", [])[:10]
+        leaks = data[:10]  # Mostra solo i primi 10
 
         for entry in leaks:
             source = entry.get("source", "Sconosciuto")
@@ -57,7 +60,7 @@ class BreachCheck(commands.Cog):
                 inline=False
             )
 
-        embed.set_footer(text="Fonte: BreachDirectory.org (free API)")
+        embed.set_footer(text="Fonte: Scylla.sh (free API)")
         await ctx.send(embed=embed)
 
 async def setup(bot):
