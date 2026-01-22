@@ -12,7 +12,6 @@ This bot includes a full suite of OSINT commands:
 |-------------|--------------------------------------------------
 | `!ip`       | Lookup information about an IP address (location, ASN, ISP, etc.) 
 | `!domain`   | Analyze a domain and retrieve OSINT data 
-| `!breach`   | Check if an email has appeared in known data breaches 
 | `!headers`  | Scan HTTP headers of a website 
 | `!phone`    | Analyze a phone number (country, carrier, type)
 | `!portscan` | Scan common or custom ports and grab service banners 
