@@ -18,7 +18,7 @@ class BreachCheck(commands.Cog):
 
         await ctx.send("🔍 Controllo in corso...")
 
-        url = f"https://scylla.sh/search?q={email}"
+        url = f"http://scylla.sh/search?q={email}"
 
         try:
             async with aiohttp.ClientSession() as session:
